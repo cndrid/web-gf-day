@@ -213,23 +213,38 @@
       }
     }
 
-    /* 6. Closing Envelope & Fullscreen Canvas (Video 2) */
-    .envelope-box {
-      font-size: 60px;
+    /* 6. Closing Heart & Fullscreen Canvas */
+    .heart-box {
+      font-size: 70px;
       cursor: pointer;
       margin: 20px 0;
-      animation: pulse 1.5s infinite;
+      display: inline-block;
+      animation: heartPulse 1.4s infinite ease-in-out;
+      filter: drop-shadow(0 6px 15px rgba(232, 138, 145, 0.4));
+      transition: transform 0.2s ease;
+      user-select: none;
     }
 
-    @keyframes pulse {
+    .heart-box:hover {
+      transform: scale(1.25) rotate(5deg);
+    }
+
+    @keyframes heartPulse {
       0% {
         transform: scale(1);
       }
-
-      50% {
-        transform: scale(1.1);
+      14% {
+        transform: scale(1.18);
       }
-
+      28% {
+        transform: scale(1);
+      }
+      42% {
+        transform: scale(1.15);
+      }
+      70% {
+        transform: scale(1);
+      }
       100% {
         transform: scale(1);
       }
@@ -350,7 +365,7 @@
 
     <!-- SLIDE 1: Welcome -->
     <div class="slide active" id="slide1">
-      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Mascot" class="mascot" />
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616430.png" alt="Cute Cat Mascot" class="mascot" />
       <h1>Happy Girlfriend Day! 🌟</h1>
       <p>A small appreciation page made just for someone who makes life a lot brighter.</p>
       <button class="btn" onclick="nextSlide(2)">Start Experience ✨</button>
@@ -421,10 +436,9 @@
     <div class="slide" id="slide5">
       <h2>A Letter For You ✉️</h2>
       <div class="letter-box">
-        <p><strong>Dear my favorite person,</strong></p>
-        <p>Terima kasih ya sudah selalu ada, bikin ketawa, dan mewarnai hari-hariku. Walau tanpa status, kamu adalah
-          sosok yang sangat berharga buat aku.</p>
-        <p>Hope this small page brings a smile to your face today!</p>
+        <p><strong>Dear Wiwik,</strong></p>
+        <p>Terima kasih ya sudah mau terus kuat semangat setiap hari nya. Terima kasih selalu jadi sosok yang hebat, bahkan di hari-hari yang bikin kamu pengen menyerah.</p>
+        <p>Lelah kamu itu bukti kalau kamu sudah berusaha sekuat tenaga. Bangga banget sama kamu! Peluk jauh dan semoga akan selalu ada kebahagian di hari hari selanjutnya yaw.</p>
       </div>
       <button class="btn" onclick="nextSlide(6)">Open Special Gift 🎁</button>
     </div>
@@ -446,14 +460,14 @@
       <button class="btn" id="nextToClosingBtn" style="display:none;" onclick="nextSlide(7)">One Last Thing ➔</button>
     </div>
 
-    <!-- SLIDE 7: Closing Grand Finale (Video 2 Fix) -->
+    <!-- SLIDE 7: Closing Grand Finale -->
     <div class="slide" id="slide7">
       <h2>A Small World About You 💖</h2>
-      <p>Tap the envelope to reveal the surprise!</p>
-      <div class="envelope-box" onclick="triggerFlowerBloom()">✉️</div>
+      <p>Tap the heart to reveal the surprise! 💖</p>
+      <div class="heart-box" onclick="triggerHeartBloom()">💖</div>
       <p id="closingText"
         style="display:none; font-weight:600; color:var(--primary); margin-top:15px; font-size:1.1rem;">
-        Thank you for being you! 🌸✨
+        Aku sayang wiwik 💖✨
       </p>
     </div>
 
@@ -600,8 +614,8 @@
       }, 2500);
     }
 
-    // Closing Flower Bloom Fullscreen (Video 2 Fix)
-    function triggerFlowerBloom() {
+    // Closing Heart Bloom Fullscreen (Smooth Big & Small Hearts Mix)
+    function triggerHeartBloom() {
       const canvas = document.getElementById('flowerCanvas');
       const ctx = canvas.getContext('2d');
       canvas.style.display = 'block';
@@ -611,41 +625,124 @@
       canvas.width = width;
       canvas.height = height;
 
-      const flowers = [];
-      const colors = ['#e88a91', '#f3b0b7', '#f7d6d0', '#ffffff', '#d86b75'];
+      const heartBox = document.querySelector('.heart-box');
+      let originX = width / 2;
+      let originY = height / 2;
+      if (heartBox) {
+        const rect = heartBox.getBoundingClientRect();
+        originX = rect.left + rect.width / 2;
+        originY = rect.top + rect.height / 2;
+      }
 
-      for (let i = 0; i < 80; i++) {
-        flowers.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          radius: 0,
-          maxRadius: Math.random() * 30 + 15,
+      const hearts = [];
+      const colors = [
+        '#e88a91', '#f43f5e', '#fb7185', '#fda4af',
+        '#fecdd3', '#ffffff', '#e11d48', '#fbbf24', '#ff85a2'
+      ];
+
+      const totalHearts = 130;
+
+      for (let i = 0; i < totalHearts; i++) {
+        const rand = Math.random();
+        let targetSize;
+        let layer;
+
+        if (rand < 0.18) {
+          targetSize = Math.random() * 80 + 80; // Big hearts (80px - 160px)
+          layer = 'bg';
+        } else if (rand < 0.65) {
+          targetSize = Math.random() * 30 + 35; // Medium hearts (35px - 65px)
+          layer = 'mid';
+        } else {
+          targetSize = Math.random() * 18 + 12; // Small hearts (12px - 30px)
+          layer = 'fg';
+        }
+
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 7 + 2;
+
+        hearts.push({
+          x: originX,
+          y: originY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - Math.random() * 1.5,
+          size: 0,
+          maxSize: targetSize,
           color: colors[Math.floor(Math.random() * colors.length)],
-          growth: Math.random() * 1.2 + 0.6
+          alpha: layer === 'bg' ? 0.35 : (Math.random() * 0.35 + 0.6),
+          growthSpeed: Math.random() * 0.04 + 0.025,
+          rotation: (Math.random() - 0.5) * 0.6,
+          rotSpeed: (Math.random() - 0.5) * 0.02,
+          delay: Math.random() * 18,
+          floatSpeedY: Math.random() * 0.7 + 0.3,
+          wobbleSpeed: Math.random() * 0.05 + 0.02,
+          wobbleFactor: Math.random() * 1.5,
+          time: Math.random() * 100,
+          layer: layer
         });
       }
 
+      let frameCount = 0;
+
+      function drawHeart(x, y, size, color, alpha, rotation) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rotation);
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        ctx.fillStyle = color;
+
+        ctx.beginPath();
+        const d = size;
+        ctx.moveTo(0, -d * 0.35);
+        ctx.bezierCurveTo(-d * 0.5, -d * 0.8, -d, -d * 0.1, 0, d * 0.6);
+        ctx.bezierCurveTo(d, -d * 0.1, d * 0.5, -d * 0.8, 0, -d * 0.35);
+        ctx.closePath();
+        ctx.shadowColor = color;
+        ctx.shadowBlur = size * 0.25;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Sort hearts by layer so large background hearts render behind smaller crisp ones
+      hearts.sort((a, b) => {
+        const order = { bg: 1, mid: 2, fg: 3 };
+        return order[a.layer] - order[b.layer];
+      });
+
       function animate() {
         ctx.clearRect(0, 0, width, height);
-        let stillGrowing = false;
+        frameCount++;
 
-        flowers.forEach(f => {
-          if (f.radius < f.maxRadius) {
-            f.radius += f.growth;
-            stillGrowing = true;
+        let activeCount = 0;
+
+        hearts.forEach(h => {
+          if (frameCount < h.delay) return;
+
+          activeCount++;
+          h.time += h.wobbleSpeed;
+
+          // Smooth scale-in transition
+          if (h.size < h.maxSize) {
+            h.size += (h.maxSize - h.size) * h.growthSpeed + 0.5;
+            if (h.size > h.maxSize) h.size = h.maxSize;
           }
 
-          ctx.beginPath();
-          ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
-          ctx.fillStyle = f.color;
-          ctx.globalAlpha = 0.85;
-          ctx.fill();
+          // Smooth movement & floating
+          h.x += h.vx + Math.sin(h.time) * h.wobbleFactor;
+          h.y += h.vy - h.floatSpeedY;
+          h.rotation += h.rotSpeed;
+          h.vx *= 0.96;
+          h.vy *= 0.96;
+
+          drawHeart(h.x, h.y, h.size, h.color, h.alpha, h.rotation);
         });
 
-        if (stillGrowing) {
-          requestAnimationFrame(animate);
-        } else {
+        if (frameCount > 30) {
           document.getElementById('closingText').style.display = 'block';
+        }
+
+        if (frameCount < 400 || activeCount > 0) {
+          requestAnimationFrame(animate);
         }
       }
 
