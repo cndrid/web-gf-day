@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Girlfriend Day ✨</title>
+  <style>
+    :root {
+      --bg-color: #fdfbf7;
+      --card-bg: #ffffff;
+      --primary: #e88a91;
+      --text-dark: #4a4a4a;
+      --text-muted: #7d7d7d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Container Slide / Section */
+    .container {
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 30px 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      text-align: center;
+      animation: fadeIn 0.6s ease-in-out forwards;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Typography & Buttons */
+    h1, h2 { color: var(--primary); margin-bottom: 15px; }
+    p { color: var(--text-dark); line-height: 1.6; font-size: 0.95rem; margin-bottom: 15px; }
+    
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 15px;
+      box-shadow: 0 4px 12px rgba(232, 138, 145, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(232, 138, 145, 0.4);
+    }
+
+    /* 1. Welcome Screen */
+    .mascot { width: 120px; margin-bottom: 20px; }
+
+    /* 2. Music Player */
+    .playlist { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+    .song-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border: 1px solid #f0f0f0;
+      border-radius: 12px;
+      background: #fafafa;
+    }
+    .song-title { font-weight: 600; font-size: 0.95rem; text-align: left; }
+    .song-artist { font-size: 0.8rem; color: var(--text-muted); text-align: left; }
+    .play-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* 3. Photo Spotlight */
+    .photo-container {
+      width: 100%;
+      max-width: 260px;
+      margin: 0 auto 20px auto;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      border: 4px solid white;
+    }
+    .photo-container img { width: 100%; display: block; object-fit: cover; }
+    .lyric-quote { font-style: italic; color: var(--primary); font-weight: 600; }
+
+    /* 4. Letter Page */
+    .letter-box {
+      background: #fff8f8;
+      border-left: 4px solid var(--primary);
+      padding: 15px;
+      text-align: left;
+      font-size: 0.9rem;
+      border-radius: 8px;
+    }
+
+    /* 5 & 6. Gift & Closing Canvas */
+    .envelope-box {
+      font-size: 60px;
+      cursor: pointer;
+      margin: 20px 0;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    /* Fullscreen Flower Overlay */
+    #flowerCanvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio Player Hidden -->
+  <audio id="audioPlayer"></audio>
+
+  <!-- Canvas Animasi Bunga Mekar -->
+  <canvas id="flowerCanvas"></canvas>
+
+  <div class="container">
+
+    <!-- SLIDE 1: Welcome -->
+    <div class="slide active" id="slide1">
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Mascot" class="mascot" />
+      <h1>Happy Girlfriend Day! 🌟</h1>
+      <p>A small appreciation page made just for someone who makes life a lot brighter.</p>
+      <button class="btn" onclick="nextSlide(2)">Start Experience ✨</button>
+    </div>
+
+    <!-- SLIDE 2: Choose Our Song (2 Lagu) -->
+    <div class="slide" id="slide2">
+      <h2>Choose Our Song 🎵</h2>
+      <p>Pilih lagu untuk menemani perjalananmu di web ini:</p>
+      
+      <div class="playlist">
+        <div class="song-card">
+          <div>
+            <div class="song-title">Anything You Want</div>
+            <div class="song-artist">Reality Club</div>
+          </div>
+          <button class="play-btn" onclick="playMusic('audio/anything-you-want.mp3', this)">▶</button>
+        </div>
+
+        <div class="song-card">
+          <div>
+            <div class="song-title">About You</div>
+            <div class="song-artist">The 1975</div>
+          </div>
+          <button class="play-btn" onclick="playMusic('audio/about-you.mp3', this)">▶</button>
+        </div>
+      </div>
+
+      <button class="btn" onclick="nextSlide(3)">Lanjut ➔</button>
+    </div>
+
+    <!-- SLIDE 3: Spotlight & Strong Woman -->
+    <div class="slide" id="slide3">
+      <h2>Anugerah Terindah & A Strong Soul ✨</h2>
+      <div class="photo-container">
+        <img src="photo.jpg" alt="Her Photo" />
+      </div>
+      <p class="lyric-quote">"Anything you want, anything you need..."</p>
+      <p>Kamu selalu berusaha memberikan yang terbaik untuk semua hal. Kekuatan dan ketangguhanmu selalu bikin aku kagum. Semoga harimu selalu dipenuhi kebahagiaan yang layak kamu dapatkan.</p>
+      <button class="btn" onclick="nextSlide(4)">Lanjut ➔</button>
+    </div>
+
+    <!-- SLIDE 4: Letter -->
+    <div class="slide" id="slide4">
+      <h2>A Letter For You ✉️</h2>
+      <div class="letter-box">
+        <p><strong>Dear my favorite person,</strong></p>
+        <p>Terima kasih ya sudah selalu ada, bikin ketawa, dan mewarnai hari-hariku. Walau tanpa status, kamu adalah sosok yang sangat berharga buat aku.</p>
+        <p>Hope this small page brings a smile to your face today!</p>
+      </div>
+      <button class="btn" onclick="nextSlide(5)">Open Gift 🎁</button>
+    </div>
+
+    <!-- SLIDE 5: Grand Finale Envelope -->
+    <div class="slide" id="slide5">
+      <h2>Your Special Surprise 🌸</h2>
+      <p>Tap the envelope to reveal the flowers!</p>
+      <div class="envelope-box" onclick="triggerFlowerBloom()">✉️</div>
+      <p id="closingText" style="display:none; font-weight:600; color:var(--primary); margin-top:15px;">
+        "A Small World About You 💖<br>Thank you for being you!"
+      </p>
+    </div>
+
+  </div>
+
+  <script>
+    // System Slide Navigation
+    function nextSlide(slideNumber) {
+      document.querySelectorAll('.slide').forEach(slide => slide.classList.remove('active'));
+      document.getElementById('slide' + slideNumber).classList.add('active');
+    }
+
+    // Audio Player Logic
+    const audio = document.getElementById('audioPlayer');
+    let currentBtn = null;
+
+    function playMusic(src, btn) {
+      if (audio.src.includes(src) && !audio.paused) {
+        audio.pause();
+        btn.innerText = '▶';
+      } else {
+        if (currentBtn) currentBtn.innerText = '▶';
+        audio.src = src;
+        audio.play();
+        btn.innerText = '⏸';
+        currentBtn = btn;
+      }
+    }
+
+    // Flower Bloom Animation (Grand Finale)
+    function triggerFlowerBloom() {
+      const canvas = document.getElementById('flowerCanvas');
+      const ctx = canvas.getContext('2d');
+      canvas.style.display = 'block';
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const flowers = [];
+      const colors = ['#e88a91', '#f3b0b7', '#f7d6d0', '#ffffff', '#d86b75'];
+
+      for (let i = 0; i < 60; i++) {
+        flowers.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: 0,
+          maxRadius: Math.random() * 25 + 15,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          growth: Math.random() * 0.8 + 0.4
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let done = true;
+
+        flowers.forEach(f => {
+          if (f.radius < f.maxRadius) {
+            f.radius += f.growth;
+            done = false;
+          }
+          
+          ctx.beginPath();
+          ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+          ctx.fillStyle = f.color;
+          ctx.globalAlpha = 0.8;
+          ctx.fill();
+        });
+
+        if (!done) {
+          requestAnimationFrame(animate);
+        } else {
+          document.getElementById('closingText').style.display = 'block';
+        }
+      }
+
+      animate();
+    }
+  </script>
+</body>
+</html>
