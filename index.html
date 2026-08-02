@@ -245,6 +245,99 @@
       z-index: 999;
       display: none;
     }
+
+    /* Sunflower Mini Game */
+    .game-score-box {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #d97706;
+      margin-bottom: 5px;
+    }
+
+    .progress-bar-bg {
+      height: 12px;
+      background: #fef08a;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 8px auto 14px auto;
+      width: 80%;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #f59e0b, #eab308);
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 10px;
+    }
+
+    .game-arena {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      background: linear-gradient(180deg, #fefce8 0%, #fef08a 100%);
+      border-radius: 16px;
+      border: 2px dashed #f59e0b;
+      overflow: hidden;
+      margin: 15px 0;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .sunflower-item {
+      position: absolute;
+      font-size: 38px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.15s ease, opacity 0.2s ease;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    }
+
+    .sunflower-item:hover {
+      transform: scale(1.2);
+    }
+
+    @keyframes floatFlower {
+      0% {
+        transform: translateY(0px) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-12px) rotate(8deg);
+      }
+      100% {
+        transform: translateY(0px) rotate(-8deg);
+      }
+    }
+
+    .pop-text {
+      position: absolute;
+      font-weight: bold;
+      color: #d97706;
+      font-size: 1rem;
+      pointer-events: none;
+      animation: popUp 0.8s forwards ease-out;
+      z-index: 20;
+    }
+
+    @keyframes popUp {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-30px) scale(1.3);
+      }
+    }
+
+    .game-success {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #d97706;
+      margin-top: 10px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
   </style>
 </head>
 
@@ -289,8 +382,31 @@
       <button class="btn" onclick="nextSlide(3)">Lanjut ➔</button>
     </div>
 
-    <!-- SLIDE 3: Spotlight -->
+    <!-- SLIDE 3: Sunflower Mini Game -->
     <div class="slide" id="slide3">
+      <h2>Sunflower Catcher 🌻</h2>
+      <p>Kumpulkan 8 bunga matahari untuk menceriakan harimu!</p>
+      
+      <div class="game-score-box">
+        🌻 Terkumpul: <span id="sunflowerCount">0</span> / 8
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="sunflowerProgressBar"></div>
+      </div>
+
+      <div class="game-arena" id="gameArena">
+        <!-- Sunflowers will spawn dynamically -->
+      </div>
+
+      <p id="gameSuccessMsg" class="game-success" style="display:none;">
+        Yayy! Kamu berhasil mengumpulkan semua bunga matahari! 🌻✨
+      </p>
+
+      <button class="btn" id="gameNextBtn" style="display:none;" onclick="nextSlide(4)">Lanjut ➔</button>
+    </div>
+
+    <!-- SLIDE 4: Spotlight -->
+    <div class="slide" id="slide4">
       <h2>Anugerah Terindah & A Strong Soul ✨</h2>
       <div class="photo-container">
         <img src="photo.jpg" alt="Her Photo" />
@@ -298,11 +414,11 @@
       <p class="lyric-quote">"Anything you want, anything you need..."</p>
       <p>Kamu selalu berusaha memberikan yang terbaik untuk semua hal. Kekuatan dan ketangguhanmu selalu bikin aku
         kagum. Semoga harimu selalu dipenuhi kebahagiaan yang layak kamu dapatkan.</p>
-      <button class="btn" onclick="nextSlide(4)">Lanjut ➔</button>
+      <button class="btn" onclick="nextSlide(5)">Lanjut ➔</button>
     </div>
 
-    <!-- SLIDE 4: Letter -->
-    <div class="slide" id="slide4">
+    <!-- SLIDE 5: Letter -->
+    <div class="slide" id="slide5">
       <h2>A Letter For You ✉️</h2>
       <div class="letter-box">
         <p><strong>Dear my favorite person,</strong></p>
@@ -310,11 +426,11 @@
           sosok yang sangat berharga buat aku.</p>
         <p>Hope this small page brings a smile to your face today!</p>
       </div>
-      <button class="btn" onclick="nextSlide(5)">Open Special Gift 🎁</button>
+      <button class="btn" onclick="nextSlide(6)">Open Special Gift 🎁</button>
     </div>
 
-    <!-- SLIDE 5: Special Gift (Animasi Bunga Video 1) -->
-    <div class="slide" id="slide5">
+    <!-- SLIDE 6: Special Gift (Animasi Bunga Video 1) -->
+    <div class="slide" id="slide6">
       <h2>Your Special Gift 🎁</h2>
       <div class="gift-box-icon" id="giftIcon" onclick="openGift()">🎁<br><small
           style="font-size:12px; color:var(--text-muted);">Tap to open</small></div>
@@ -327,11 +443,11 @@
 
       <p id="giftQuote" style="display:none; font-style:italic; color:var(--primary); font-weight:600;">"This flower
         will never fade."</p>
-      <button class="btn" id="nextToClosingBtn" style="display:none;" onclick="nextSlide(6)">One Last Thing ➔</button>
+      <button class="btn" id="nextToClosingBtn" style="display:none;" onclick="nextSlide(7)">One Last Thing ➔</button>
     </div>
 
-    <!-- SLIDE 6: Closing Grand Finale (Video 2 Fix) -->
-    <div class="slide" id="slide6">
+    <!-- SLIDE 7: Closing Grand Finale (Video 2 Fix) -->
+    <div class="slide" id="slide7">
       <h2>A Small World About You 💖</h2>
       <p>Tap the envelope to reveal the surprise!</p>
       <div class="envelope-box" onclick="triggerFlowerBloom()">✉️</div>
@@ -348,6 +464,111 @@
     function nextSlide(slideNumber) {
       document.querySelectorAll('.slide').forEach(slide => slide.classList.remove('active'));
       document.getElementById('slide' + slideNumber).classList.add('active');
+
+      if (slideNumber === 3) {
+        startSunflowerGame();
+      }
+    }
+
+    // Sunflower Mini Game Logic
+    let sunflowerScore = 0;
+    const targetScore = 8;
+    let gameInterval = null;
+
+    function startSunflowerGame() {
+      sunflowerScore = 0;
+      updateGameUI();
+      const arena = document.getElementById('gameArena');
+      if (!arena) return;
+      arena.innerHTML = '';
+      document.getElementById('gameSuccessMsg').style.display = 'none';
+      document.getElementById('gameNextBtn').style.display = 'none';
+
+      if (gameInterval) clearInterval(gameInterval);
+
+      for (let i = 0; i < 3; i++) {
+        spawnSunflower();
+      }
+
+      gameInterval = setInterval(() => {
+        if (sunflowerScore < targetScore) {
+          const activeCount = arena.querySelectorAll('.sunflower-item').length;
+          if (activeCount < 4) {
+            spawnSunflower();
+          }
+        } else {
+          clearInterval(gameInterval);
+        }
+      }, 1000);
+    }
+
+    function spawnSunflower() {
+      const arena = document.getElementById('gameArena');
+      if (!arena) return;
+
+      const flower = document.createElement('div');
+      flower.className = 'sunflower-item';
+      flower.innerText = '🌻';
+
+      const arenaWidth = arena.clientWidth || 320;
+      const arenaHeight = arena.clientHeight || 240;
+      const maxX = Math.max(10, arenaWidth - 50);
+      const maxY = Math.max(10, arenaHeight - 50);
+      const startX = Math.floor(Math.random() * maxX);
+      const startY = Math.floor(Math.random() * maxY);
+
+      flower.style.left = startX + 'px';
+      flower.style.top = startY + 'px';
+
+      const duration = 1.8 + Math.random() * 1.5;
+      flower.style.animation = `floatFlower ${duration}s infinite alternate ease-in-out`;
+
+      const collectHandler = (e) => {
+        e.stopPropagation();
+        if (flower.dataset.collected) return;
+        flower.dataset.collected = "true";
+
+        const pop = document.createElement('span');
+        pop.className = 'pop-text';
+        pop.innerText = '+1 🌻';
+        pop.style.left = flower.style.left;
+        pop.style.top = flower.style.top;
+        arena.appendChild(pop);
+        setTimeout(() => pop.remove(), 800);
+
+        flower.style.transform = 'scale(1.5) rotate(20deg)';
+        flower.style.opacity = '0';
+
+        sunflowerScore++;
+        updateGameUI();
+
+        setTimeout(() => {
+          flower.remove();
+          if (sunflowerScore < targetScore) {
+            spawnSunflower();
+          }
+        }, 150);
+      };
+
+      flower.addEventListener('click', collectHandler);
+      flower.addEventListener('touchstart', collectHandler, { passive: true });
+
+      arena.appendChild(flower);
+    }
+
+    function updateGameUI() {
+      const countEl = document.getElementById('sunflowerCount');
+      const barEl = document.getElementById('sunflowerProgressBar');
+      if (countEl) countEl.innerText = sunflowerScore;
+      if (barEl) {
+        const percentage = Math.min(100, (sunflowerScore / targetScore) * 100);
+        barEl.style.width = percentage + '%';
+      }
+
+      if (sunflowerScore >= targetScore) {
+        document.getElementById('gameSuccessMsg').style.display = 'block';
+        document.getElementById('gameNextBtn').style.display = 'inline-block';
+      }
     }
 
     // Music Player
